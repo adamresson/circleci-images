@@ -114,7 +114,7 @@ jobs:
     <<: *publish_image
     environment:
       - PLATFORM: openjdk
-
+ 
   publish_buildpack-deps:
     <<: *publish_image
     environment:
@@ -122,7 +122,7 @@ jobs:
 
 workflow_filters: &workflow_filters
   requires:
-    - refresh_tools_cache
+    - generate_dockerfiles
   filters:
     branches:
       only:
@@ -132,18 +132,9 @@ workflow_filters: &workflow_filters
 
 workflows:
   version: 2
-  build_test_deploy:
+  build:
     jobs:
       - generate_dockerfiles
-      - refresh_tools_cache:
-          requires:
-          - generate_dockerfiles
-          filters:
-            branches:
-              only:
-                - master
-                - production
-                - parallel
       - publish_android:  *workflow_filters
       - publish_node:     *workflow_filters
       - publish_python:   *workflow_filters
